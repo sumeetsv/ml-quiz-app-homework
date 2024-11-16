@@ -61,6 +61,27 @@ After building the project, you can start the application using:
 npm start
 ```
 
+### Running the Project with Docker
+If you want to run the project using Docker, follow these steps:
+
+1. Make sure you have Docker installed on your system. If not, you can download and install from [Docker](docker.com).
+
+2. Clone the repository and navigate to the project directory (same as the standard installation steps above).
+
+3. Build and start the Docker containers by running the following command in the project directory:
+
+```bash
+docker-compose up --build
+```
+
+4. The application will be available on port 3000. You can access it by navigating to http://localhost:3000 in your browser.
+
+5. To stop the Docker containers, run:
+
+```bash
+docker-compose down
+```
+
 ## Folder Structure
 
 -   `src/`: Contains all source code files.
