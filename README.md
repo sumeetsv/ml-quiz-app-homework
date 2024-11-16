@@ -14,7 +14,7 @@ Make sure you have `Node.js` and `npm` installed on your machine. If not, downlo
 
 1. Clone the repository:
     ```bash
-    git clone https://github.com/your-username/ml-quiz-app.git
+    git clone https://github.com/sumeetsv/ml-quiz-app-homework.git
     ```
 2. Navigate to the project directory:
     ```bash
@@ -60,6 +60,21 @@ After building the project, you can start the application using:
 ```bash
 npm start
 ```
+
+## Folder Structure
+
+- `src/`: Contains all source code files.
+- `dist/`: Contains the compiled JavaScript files after building the project.
+- `tests/`: Contains unit and integration test files.
+
+## Technologies Used
+
+- **Node.js** - JavaScript runtime used for the server.
+- **Express.js** - Web framework for building the API.
+- **Jest** - Testing framework for unit and integration tests.
+- **TypeScript** - Superset of JavaScript for type safety.
+- **Joi** - Validation library for request validation.
+- **Supertest** - Testing library for HTTP assertions.
 
 ## Dependencies
 
