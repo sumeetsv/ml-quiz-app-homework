@@ -7,7 +7,7 @@ export const createQuizSchema = Joi.object({
       Joi.object({
         text: Joi.string().required(),
         options: Joi.array().items(Joi.string()).min(2).required(),
-        correct_option: Joi.number().required(),
+        correctOption: Joi.number().required(),
       })
     )
     .min(1)

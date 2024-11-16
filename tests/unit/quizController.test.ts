@@ -10,7 +10,7 @@ describe('Quiz Controller - Create Quiz', () => {
         {
           text: 'What is 2 + 2?',
           options: ['3', '4', '5', '6'],
-          correct_option: 1 // Correct option as a number
+          correctOption: 1 // Correct option as a number
         }
       ]
     };
@@ -22,7 +22,7 @@ describe('Quiz Controller - Create Quiz', () => {
 
     expect(response.body.title).toBe('New Quiz');
     expect(response.body.questions.length).toBe(1);
-    expect(response.body.questions[0].correct_option).toBe(1); // Correct option as number
+    expect(response.body.questions[0].correctOption).toBe(1); // Correct option as number
   });
 });
 
@@ -35,7 +35,7 @@ describe('Quiz Controller', () => {
         {
           text: 'What is 2 + 2?',
           options: ['3', '4', '5'],
-          correct_option: 1,
+          correctOption: 1,
         },
       ],
     };
@@ -65,7 +65,7 @@ it('should return a quiz by ID', async () => {
       {
         text: 'Sample Question',
         options: ['Option 1', 'Option 2', 'Option 3', 'Option 4'],
-        correct_option: 1,
+        correctOption: 1,
       },
     ],
   };
@@ -97,7 +97,7 @@ it('should return a quiz by ID', async () => {
           {
               text: 'What is the capital of France?',
               options: ['Paris', 'London', 'Rome'],
-              correct_option: 0,
+              correctOption: 0,
           },
       ],
   };
@@ -148,7 +148,7 @@ describe('Submit Answer Endpoint', () => {
         {
           id: 'question-1',
           text: 'What is 2+2?',
-          correct_option: 1, // correct_option should be a number
+          correctOption: 1, // correctOption should be a number
           options: ['1', '2', '3'], // options remain as strings
         },
       ],
@@ -160,7 +160,7 @@ describe('Submit Answer Endpoint', () => {
     const data = {
       quizId: 'quiz-1',
       questionId: 'question-1',
-      selectedOption: 1, // Convert selectedOption to a number to match correct_option
+      selectedOption: 1, // Convert selectedOption to a number to match correctOption
     };
 
     const response = await request(app)
@@ -183,7 +183,7 @@ describe('Submit Answer Endpoint', () => {
         {
           id: 'question-1',
           text: 'What is 2+2?',
-          correct_option: 1, // correct_option should be a number
+          correctOption: 1, // correctOption should be a number
           options: ['1', '2', '3'], // options remain as strings
         },
       ],
@@ -218,7 +218,7 @@ describe('Submit Answer Endpoint', () => {
         {
           id: 'question-1',
           text: 'What is 2+2?',
-          correct_option: 1, // correct_option should be a number
+          correctOption: 1, // correctOption should be a number
           options: ['1', '2', '3'], // options remain as strings
         },
       ],
@@ -252,7 +252,7 @@ describe('Submit Answer Endpoint', () => {
         {
           id: 'question-1',
           text: 'What is 2+2?',
-          correct_option: 1, // correct_option should be a number
+          correctOption: 1, // correctOption should be a number
           options: ['1', '2', '3'], // options remain as strings
         },
       ],

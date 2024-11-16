@@ -62,6 +62,7 @@ npm start
 ```
 
 ### Running the Project with Docker
+
 If you want to run the project using Docker, follow these steps:
 
 1. Make sure you have Docker installed on your system. If not, you can download and install from [Docker](docker.com).
@@ -122,7 +123,7 @@ docker-compose down
   "id": "1",
   "text": "What is the capital of France?",
   "options": ["Berlin", "Madrid", "Paris", "Rome"],
-  "correct_option": 3
+  "correctOption": 3
 }
 ```
 
@@ -137,13 +138,13 @@ docker-compose down
       "id": "1",
       "text": "What is the capital of France?",
       "options": ["Berlin", "Madrid", "Paris", "Rome"],
-      "correct_option": 3
+      "correctOption": 3
     },
     {
       "id": "2",
       "text": "What is 2 + 2?",
       "options": ["3", "4", "5", "6"],
-      "correct_option": 2
+      "correctOption": 2
     }
   ]
 }

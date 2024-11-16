@@ -18,7 +18,7 @@ export const createQuiz = async (req: Request, res: Response): Promise<void> => 
                 id: uuidv4(),
                 text: q.text,
                 options: q.options,
-                correct_option: q.correct_option
+                correctOption: q.correctOption
             }))
         };
 
@@ -52,7 +52,7 @@ export const getQuiz = async (req: Request, res: Response): Promise<void> => {
         const quizWithoutAnswers = {
             ...quiz,
             questions: quiz.questions.map((question: Question) => {
-                const { correct_option, ...rest } = question;
+                const { correctOption, ...rest } = question;
                 return rest;
             }),
         };
@@ -90,14 +90,14 @@ export const submitAnswer = async (req: Request, res: Response): Promise<void> =
             return;
         }
 
-        const isCorrect = question.correct_option === selectedOption;
+        const isCorrect = question.correctOption === selectedOption;
 
         if (isCorrect) {
             logger.info('Correct answer submitted');
             res.json({ message: 'Correct answer!' });
         } else {
-            logger.info(`Incorrect answer submitted. Correct option: ${question.correct_option}`);
-            res.json({ message: 'Incorrect answer', correctAnswer: question.correct_option });
+            logger.info(`Incorrect answer submitted. Correct option: ${question.correctOption}`);
+            res.json({ message: 'Incorrect answer', correctAnswer: question.correctOption });
         }
     } catch (error: unknown) {
         if (error instanceof Error) {

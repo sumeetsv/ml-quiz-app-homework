@@ -22,8 +22,8 @@ describe('GET /api/quizzes/:id', () => {
       id: existingQuizId,
       title: 'Sample Quiz',
       questions: [
-        { id: 'q1', text: 'What is 2 + 2?', correct_option: 4, options: ['3', '4', '5'] },
-        { id: 'q2', text: 'What is 5 + 3?', correct_option: 8, options: ['6', '7', '8'] },
+        { id: 'q1', text: 'What is 2 + 2?', correctOption: 4, options: ['3', '4', '5'] },
+        { id: 'q2', text: 'What is 5 + 3?', correctOption: 8, options: ['6', '7', '8'] },
       ],
     };
     // Assuming you have a function to add quizzes to your mock data
