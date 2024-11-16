@@ -6,9 +6,8 @@ import { v4 as uuidv4 } from 'uuid';
 import logger from '../logger/logger';
 
 // Create a new quiz
-export const createQuiz = async (req: Request, res: Response) => {
+export const createQuiz = async (req: Request, res: Response): Promise<void> => {
     try {
-
         const { title, questions } = req.body;
         logger.info('Creating a new quiz');
 
@@ -25,7 +24,7 @@ export const createQuiz = async (req: Request, res: Response) => {
 
         quizzes.push(quiz);
         logger.info(`Quiz created successfully with ID: ${quiz.id}`);
-        res.status(201).json(quiz);
+        res.status(201).json(quiz); // Send quiz object as response
     } catch (error: unknown) {
         if (error instanceof Error) {
             logger.error(`Failed to create quiz: ${error.message}`);
@@ -40,17 +39,16 @@ export const createQuiz = async (req: Request, res: Response) => {
 export const getQuiz = async (req: Request, res: Response): Promise<void> => {
     try {
         const quizId = req.params.id;
-        logger.info(`Fetching quiz with ID: ${quizId}`); // Log quiz fetching
+        logger.info(`Fetching quiz with ID: ${quizId}`);
 
         const quiz = quizzes.find((q) => q.id === quizId);
 
         if (!quiz) {
-            logger.warn(`Quiz with ID ${quizId} not found`); // Log warning if quiz not found
+            logger.warn(`Quiz with ID ${quizId} not found`);
             res.status(404).json({ message: 'Quiz not found' });
             return;
         }
 
-        // Explicitly type 'question' as 'Question'
         const quizWithoutAnswers = {
             ...quiz,
             questions: quiz.questions.map((question: Question) => {
@@ -60,7 +58,7 @@ export const getQuiz = async (req: Request, res: Response): Promise<void> => {
         };
 
         logger.info(`Quiz with ID: ${quizId} fetched successfully`);
-        res.status(200).json(quizWithoutAnswers);
+        res.status(200).json(quizWithoutAnswers); // Send the quiz without answers
     } catch (error: unknown) {
         if (error instanceof Error) {
             logger.error(`Error fetching quiz with ID ${req.params.id}: ${error.message}`);
@@ -78,7 +76,6 @@ export const submitAnswer = async (req: Request, res: Response): Promise<void> =
 
         logger.info(`Submitting answer for Quiz ID: ${quizId}, Question ID: ${questionId}, Selected Option: ${selectedOption}`);
 
-        // Find the quiz
         const quiz = quizzes.find((q) => q.id === quizId);
         if (!quiz) {
             logger.warn(`Quiz with ID ${quizId} not found`);
@@ -86,7 +83,6 @@ export const submitAnswer = async (req: Request, res: Response): Promise<void> =
             return;
         }
 
-        // Find the question
         const question = quiz.questions.find((q) => q.id === questionId);
         if (!question) {
             logger.warn(`Question with ID ${questionId} not found`);
@@ -94,10 +90,8 @@ export const submitAnswer = async (req: Request, res: Response): Promise<void> =
             return;
         }
 
-        // Check if the answer is correct
         const isCorrect = question.correct_option === selectedOption;
 
-        // Send feedback
         if (isCorrect) {
             logger.info('Correct answer submitted');
             res.json({ message: 'Correct answer!' });
@@ -122,8 +116,6 @@ export const getResults = async (req: Request, res: Response): Promise<void> => 
 
         logger.info(`Fetching results for User ID: ${userId}, Quiz ID: ${quizId}`);
 
-
-        // Find the user's results for the quiz
         const result = results.find(
             (r) => r.quiz_id === quizId && r.user_id === userId
         );
@@ -134,7 +126,6 @@ export const getResults = async (req: Request, res: Response): Promise<void> => 
             return;
         }
 
-        // Return the result details
         logger.info(`Results fetched successfully for User ID: ${userId}, Quiz ID: ${quizId}`);
         res.json({
             score: result.score,
@@ -148,7 +139,7 @@ export const getResults = async (req: Request, res: Response): Promise<void> => 
         if (error instanceof Error) {
             logger.error(`Error fetching results for User ID: ${req.params.userId}, Quiz ID: ${req.params.quizId}: ${error.message}`);
         } else {
-            logger.error(`Error fetching results for User ID: ${req.params.userId}, Quiz ID: ${req.params.quizId}: uknown error`);
+            logger.error(`Error fetching results for User ID: ${req.params.userId}, Quiz ID: ${req.params.quizId}: unknown error`);
         }
         res.status(500).json({ message: 'Server error', error });
     }
