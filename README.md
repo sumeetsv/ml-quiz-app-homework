@@ -4,6 +4,9 @@
 
 A quiz application that allows users to answer multiple-choice questions and receive feedback on their performance.
 
+## Note
+A docker-compose.yml file is not included in this project. However, you can set up and run the app by following the below instructions
+
 ## Getting Started
 
 ### Prerequisites
