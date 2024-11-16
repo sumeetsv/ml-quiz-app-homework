@@ -9,7 +9,7 @@ export const validateRequest = (schema: ObjectSchema) => {
       // Send a 400 Bad Request response with validation error details
       res.status(400).json({
         status: 'error',
-        message: 'Invalid request data',
+        message: 'Bad request',
         details: error.details.map((err) => err.message),
       });
       return;

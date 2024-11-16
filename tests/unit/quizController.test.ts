@@ -1,123 +1,277 @@
 import request from 'supertest';
-import { app } from '../../src/app';  // Import your app instance
+import { app } from '../../src/app';
+import { quizzes } from '../../src/models/quizModel';
+
+describe('Quiz Controller - Create Quiz', () => {
+  it('POST /quizzes should create a new quiz', async () => {
+    const quizData = {
+      title: 'New Quiz',
+      questions: [
+        {
+          text: 'What is 2 + 2?',
+          options: ['3', '4', '5', '6'],
+          correct_option: 1 // Correct option as a number
+        }
+      ]
+    };
+
+    const response = await request(app)
+      .post('/quizzes')
+      .send(quizData)
+      .expect(201); // Expecting a 201 Created response
+
+    expect(response.body.title).toBe('New Quiz');
+    expect(response.body.questions.length).toBe(1);
+    expect(response.body.questions[0].correct_option).toBe(1); // Correct option as number
+  });
+});
 
 describe('Quiz Controller', () => {
+  it('GET /quizzes/:id - should fetch a quiz by ID', async () => {
+    // Create a quiz first to test fetching
+    const quizData = {
+      title: 'Fetch Quiz Test',
+      questions: [
+        {
+          text: 'What is 2 + 2?',
+          options: ['3', '4', '5'],
+          correct_option: 1,
+        },
+      ],
+    };
 
-  // Test POST /quizzes - Should create a new quiz
-  describe('POST /quizzes', () => {
-    it('should create a new quiz', async () => {
-      const quizData = {
-        title: 'New Quiz',
-        questions: [
-          { question: 'What is 2 + 2?', options: ['3', '4', '5'], answer: '4' }
-        ]
-      };
+    const createResponse = await request(app)
+      .post('/quizzes')
+      .send(quizData)
+      .expect(201);
 
-      const response = await request(app)
-        .post('/quizzes')  // Correct endpoint
-        .send(quizData)
-        .expect(201);  // Expecting a 201 Created response
+    const quizId = createResponse.body.id;
 
-      expect(response.body.title).toBe('New Quiz');
-      expect(response.body.questions.length).toBe(1);
-    });
+    const response = await request(app)
+      .get(`/quizzes/${quizId}`)
+      .expect(200);
+
+    expect(response.body.title).toBe('Fetch Quiz Test');
+    expect(response.body.questions.length).toBe(1);
+    expect(response.body.questions[0].text).toBe('What is 2 + 2?');
   });
+});
 
-  // Test GET /quizzes/:id - Should return a quiz by ID
-  describe('GET /quizzes/:id', () => {
-    it('should return a quiz by ID', async () => {
-      const quizData = {
-        title: 'Sample Quiz',
-        questions: [
-          { question: 'What is 2 + 2?', options: ['3', '4', '5'], answer: '4' }
-        ]
-      };
+it('should return a quiz by ID', async () => {
+  // Create a quiz first
+  const quizData = {
+    title: 'Sample Quiz',
+    questions: [
+      {
+        text: 'Sample Question',
+        options: ['Option 1', 'Option 2', 'Option 3', 'Option 4'],
+        correct_option: 1,
+      },
+    ],
+  };
 
-      // Create a quiz first to test the GET request
-      const createResponse = await request(app)
-        .post('/quizzes')
-        .send(quizData)
-        .expect(201);
+  const createResponse = await request(app)
+    .post('/quizzes')
+    .send(quizData)
+    .expect(201);
 
-      const quizId = createResponse.body.id; // Assuming the response contains the quiz ID
+  const quizId = createResponse.body.id;
 
-      // Now GET the quiz by ID
-      const response = await request(app)
-        .get(`/quizzes/${quizId}`)  // Correct endpoint
-        .expect(200);  // Expecting a 200 OK response
+  // Fetch the created quiz by ID
+  const response = await request(app)
+    .get(`/quizzes/${quizId}`)
+    .expect(200);
 
-      expect(response.body.id).toBe(quizId);
-      expect(response.body.title).toBe('Sample Quiz');
-    });
+  expect(response.body).toHaveProperty('id', quizId);
+  expect(response.body).toHaveProperty('title', quizData.title);
+  expect(response.body.questions.length).toBe(quizData.questions.length);
+  expect(response.body.questions[0].text).toBe(quizData.questions[0].text);
+});
+
+
+it('should return a quiz by ID', async () => {
+  // Step 1: Create a new quiz to fetch later
+  const quizData = {
+      title: 'Sample Quiz',
+      questions: [
+          {
+              text: 'What is the capital of France?',
+              options: ['Paris', 'London', 'Rome'],
+              correct_option: 0,
+          },
+      ],
+  };
+
+  const createResponse = await request(app)
+      .post('/quizzes')
+      .send(quizData)
+      .expect(201);
+
+  const quizId = createResponse.body.id; // Extract the created quiz ID
+
+  // Step 2: Fetch the created quiz by its ID
+  const fetchResponse = await request(app)
+      .get(`/quizzes/${quizId}`)
+      .expect(200);
+
+  // Step 3: Validate the response
+  expect(fetchResponse.body.title).toBe(quizData.title);
+  expect(fetchResponse.body.questions.length).toBe(quizData.questions.length);
+  expect(fetchResponse.body.questions[0].text).toBe(quizData.questions[0].text);
+});
+
+it('should return 400 Bad Request if missing quizId, questionId, or selectedOption', async () => {
+  const invalidData = [
+    { quizId: '', questionId: 'question-1', selectedOption: 1 }, // Missing quizId
+    { quizId: 'quiz-1', questionId: '', selectedOption: 1 }, // Missing questionId
+    { quizId: 'quiz-1', questionId: 'question-1', selectedOption: null }, // Missing selectedOption
+    { quizId: 'quiz-1', questionId: 'question-1', selectedOption: 'invalid' }, // Invalid selectedOption (not an integer)
+  ];
+
+  for (const data of invalidData) {
+    const response = await request(app)
+      .post(`/quizzes/quiz-1/questions/question-1/submit`)
+      .send(data);
+    
+    expect(response.status).toBe(400);
+    expect(response.body.message).toBe('Bad request'); // Adjust as per your response message
+  }
+});
+
+describe('Submit Answer Endpoint', () => {
+  it('should return 200 with success message when the answer is correct', async () => {
+    // Create a quiz with the correct options type (numbers)
+    const quiz = {
+      id: 'quiz-1',
+      title: 'Sample Quiz',
+      questions: [
+        {
+          id: 'question-1',
+          text: 'What is 2+2?',
+          correct_option: 1, // correct_option should be a number
+          options: ['1', '2', '3'], // options remain as strings
+        },
+      ],
+    };
+
+    // Add this quiz to the mock data
+    quizzes.push(quiz); // Assuming quizzes is the array storing quizzes
+
+    const data = {
+      quizId: 'quiz-1',
+      questionId: 'question-1',
+      selectedOption: 1, // Convert selectedOption to a number to match correct_option
+    };
+
+    const response = await request(app)
+      .post(`/quizzes/${data.quizId}/questions/${data.questionId}/submit`)
+      .send(data);
+
+    expect(response.status).toBe(200);
+    expect(response.body.message).toBe('Correct answer!');
   });
+});
 
-  // Test POST /quizzes/:quizId/questions/:questionId/submit - Should submit an answer
-  describe('POST /quizzes/:quizId/questions/:questionId/submit', () => {
-    it('should submit an answer and return results', async () => {
-      const quizData = {
-        title: 'Sample Quiz',
-        questions: [
-          { question: 'What is 2 + 2?', options: ['3', '4', '5'], answer: '4' }
-        ]
-      };
 
-      // Create a quiz first
-      const createResponse = await request(app)
-        .post('/quizzes')
-        .send(quizData)
-        .expect(201);
+describe('Submit Answer Endpoint', () => {
+  it('should return 200 with incorrect answer message and correct answer when the answer is wrong', async () => {
+    // Create a quiz with the correct options type (numbers)
+    const quiz = {
+      id: 'quiz-1',
+      title: 'Sample Quiz',
+      questions: [
+        {
+          id: 'question-1',
+          text: 'What is 2+2?',
+          correct_option: 1, // correct_option should be a number
+          options: ['1', '2', '3'], // options remain as strings
+        },
+      ],
+    };
 
-      const quizId = createResponse.body.id; // Get the quiz ID
-      const questionId = createResponse.body.questions[0].id; // Get the question ID
+    // Add this quiz to the mock data
+    quizzes.push(quiz); // Assuming quizzes is the array storing quizzes
 
-      const answerData = { userId: '123', answer: '4' };
+    const data = {
+      quizId: 'quiz-1',
+      questionId: 'question-1',
+      selectedOption: 2, // Incorrect answer
+    };
 
-      // Submit the answer
-      const response = await request(app)
-        .post(`/quizzes/${quizId}/questions/${questionId}/submit`)  // Correct endpoint
-        .send(answerData)
-        .expect(200);  // Expecting a 200 OK response
+    const response = await request(app)
+      .post(`/quizzes/${data.quizId}/questions/${data.questionId}/submit`)
+      .send(data);
 
-      expect(response.body.score).toBe(1);  // Assuming the score is returned
-      expect(response.body.userId).toBe('123');
-    });
+    expect(response.status).toBe(200);
+    expect(response.body.message).toBe('Incorrect answer');
+    expect(response.body.correctAnswer).toBe(1); // The correct answer should be 1
   });
+});
 
-  // Test GET /quizzes/:quizId/results/:userId - Should get results for a user
-  describe('GET /quizzes/:quizId/results/:userId', () => {
-    it('should get the results for a specific user', async () => {
-      const quizData = {
-        title: 'Sample Quiz',
-        questions: [
-          { question: 'What is 2 + 2?', options: ['3', '4', '5'], answer: '4' }
-        ]
-      };
+describe('Submit Answer Endpoint', () => {
+  it('should return 404 when the question is not found', async () => {
+    // Create a quiz with a sample question
+    const quiz = {
+      id: 'quiz-1',
+      title: 'Sample Quiz',
+      questions: [
+        {
+          id: 'question-1',
+          text: 'What is 2+2?',
+          correct_option: 1, // correct_option should be a number
+          options: ['1', '2', '3'], // options remain as strings
+        },
+      ],
+    };
 
-      // Create a quiz first
-      const createResponse = await request(app)
-        .post('/quizzes')
-        .send(quizData)
-        .expect(201);
+    // Add this quiz to the mock data
+    quizzes.push(quiz); // Assuming quizzes is the array storing quizzes
 
-      const quizId = createResponse.body.id; // Get the quiz ID
+    const data = {
+      quizId: 'quiz-1',
+      questionId: 'question-999', // Invalid question ID
+      selectedOption: 1,
+    };
 
-      // Submit an answer for a user (assuming userId is '123')
-      const questionId = createResponse.body.questions[0].id; // Get the question ID
-      const answerData = { userId: '123', answer: '4' };
+    const response = await request(app)
+      .post(`/quizzes/${data.quizId}/questions/${data.questionId}/submit`)
+      .send(data);
 
-      await request(app)
-        .post(`/quizzes/${quizId}/questions/${questionId}/submit`)
-        .send(answerData)
-        .expect(200);  // Answer submission
-
-      // Get results for the user
-      const response = await request(app)
-        .get(`/quizzes/${quizId}/results/123`)  // Correct endpoint
-        .expect(200);  // Expecting a 200 OK response
-
-      expect(response.body.userId).toBe('123');
-      expect(response.body.score).toBe(1);  // Assuming the score is returned
-    });
+    expect(response.status).toBe(404);
+    expect(response.body.message).toBe('Question not found');
   });
+});
 
+describe('Submit Answer Endpoint', () => {
+  it('should return 404 when the quiz is not found', async () => {
+    // Create a quiz with a sample question
+    const quiz = {
+      id: 'quiz-1',
+      title: 'Sample Quiz',
+      questions: [
+        {
+          id: 'question-1',
+          text: 'What is 2+2?',
+          correct_option: 1, // correct_option should be a number
+          options: ['1', '2', '3'], // options remain as strings
+        },
+      ],
+    };
+
+    // Add this quiz to the mock data
+    quizzes.push(quiz); // Assuming quizzes is the array storing quizzes
+
+    const data = {
+      quizId: 'quiz-999', // Invalid quiz ID
+      questionId: 'question-1',
+      selectedOption: 1,
+    };
+
+    const response = await request(app)
+      .post(`/quizzes/${data.quizId}/questions/${data.questionId}/submit`)
+      .send(data);
+
+    expect(response.status).toBe(404);
+    expect(response.body.message).toBe('Quiz not found');
+  });
 });
