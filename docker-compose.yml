@@ -16,7 +16,7 @@ services:
         working_dir: /usr/src/app # Set working directory inside the container
         command: npm run devStart # Run devStart (nodemon) for development
         environment:
-            - NODE_ENV=development
+            - PORT=3000
         networks:
             - quiz-app-network
 
