@@ -21,7 +21,7 @@ Make sure you have `Node.js` and `npm` installed on your machine. If not, downlo
     ```
 2. Navigate to the project directory:
     ```bash
-    cd ml-quiz-app
+    cd ml-quiz-app-homework
     ```
 3. Create a .env file at the root of the project. You can copy the sample below:
     ```bash
