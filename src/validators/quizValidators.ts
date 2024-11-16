@@ -16,12 +16,23 @@ export const createQuizSchema = Joi.object({
 
 
 export const submitAnswerSchema = Joi.object({
-  quizId: Joi.string().required(), // Quiz ID must be a string
-  questionId: Joi.string().required(), // Question ID must be a string
-  selectedOption: Joi.number().integer().min(0).required(), // Selected option must be a non-negative integer
+  userId: Joi.string().required(),
+  selectedOption: Joi.number().integer().min(0).max(3).required() // Selected option must be a non-negative integer
 });
 
+// Define the Joi schema for getQuiz URL parameters
+export const getQuizUrlParamsSchema = Joi.object({
+  id: Joi.string().required(),
+});
 
-export const getResultsSchema = Joi.object({
+// Define the Joi schema for submitAnswer URL parameters
+export const submitAnswerUrlParamsSchema = Joi.object({
+  quizId: Joi.string().required(),
+  questionId: Joi.string().required(),
+});
+
+// Define the Joi schema for getResults URL parameters
+export const getResultsUrlParamsSchema = Joi.object({
+  quizId: Joi.string().required(),
   userId: Joi.string().required(),
 });

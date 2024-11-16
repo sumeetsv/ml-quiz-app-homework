@@ -4,6 +4,7 @@ import { results } from "../models/quizResultModel";
 import { Question } from "../models/questionModel";
 import { v4 as uuidv4 } from 'uuid';
 import logger from '../logger/logger';
+import { Answer } from '../models/answerModel';
 
 // Create a new quiz
 export const createQuiz = async (req: Request, res: Response): Promise<void> => {
@@ -72,9 +73,10 @@ export const getQuiz = async (req: Request, res: Response): Promise<void> => {
 // Submit an answer for a specific question in a quiz
 export const submitAnswer = async (req: Request, res: Response): Promise<void> => {
     try {
-        const { quizId, questionId, selectedOption } = req.body;
+        const { quizId, questionId } = req.params;
+        const { userId, selectedOption } = req.body;
 
-        logger.info(`Submitting answer for Quiz ID: ${quizId}, Question ID: ${questionId}, Selected Option: ${selectedOption}`);
+        logger.info(`Submitting answer for Quiz ID: ${quizId}, Question ID: ${questionId}, User ID: ${userId}, Selected Option: ${selectedOption}`);
 
         const quiz = quizzes.find((q) => q.id === quizId);
         if (!quiz) {
@@ -91,6 +93,37 @@ export const submitAnswer = async (req: Request, res: Response): Promise<void> =
         }
 
         const isCorrect = question.correctOption === selectedOption;
+
+        // Try to find the user's results for this quiz
+        let quizResult = results.find((r) => r.quizId === quizId && r.userId === userId);
+
+        // If the user's result doesn't exist, create a new one
+        if (!quizResult) {
+            quizResult = {
+                quizId,
+                userId,
+                score: 0,
+                answers: [],
+            };
+            results.push(quizResult); // Add new result to the results array
+        }
+
+        // Add the user's answer to the answers array
+        const newAnswer: Answer = {
+            questionId,
+            selectedOption,
+            isCorrect,
+        };
+
+        quizResult.answers.push(newAnswer);
+
+        // Update the score
+        quizResult.score = quizResult.answers.reduce((totalScore, answer) => {
+            if (answer.isCorrect) {
+                totalScore += 1; // Add to score if the answer is correct
+            }
+            return totalScore;
+        }, 0);
 
         if (isCorrect) {
             logger.info('Correct answer submitted');
