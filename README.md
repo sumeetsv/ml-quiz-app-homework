@@ -94,3 +94,67 @@ npm start
 -   **nodemon**: Automatically restarts the server during development
 -   **typescript**: TypeScript language support
 -   **supertest**: HTTP assertions for testing APIs
+
+## Summary of Data Models
+
+### `Question` Model
+```
+{
+  "id": "1",
+  "text": "What is the capital of France?",
+  "options": ["Berlin", "Madrid", "Paris", "Rome"],
+  "correct_option": 3
+}
+```
+
+### `Quiz` Model
+```
+{
+  "id": "12345",
+  "title": "Sample Quiz",
+  "questions": [
+    {
+      "id": "1",
+      "text": "What is the capital of France?",
+      "options": ["Berlin", "Madrid", "Paris", "Rome"],
+      "correct_option": 3
+    },
+    {
+      "id": "2",
+      "text": "What is 2 + 2?",
+      "options": ["3", "4", "5", "6"],
+      "correct_option": 2
+    }
+  ]
+}
+```
+
+### `Answer` Model
+```
+{
+  "question_id": "1",
+  "selected_option": 3,
+  "is_correct": true
+}
+```
+
+### `QuizResult` Model
+```
+{
+  "quiz_id": "12345",
+  "user_id": "user123",
+  "score": 1,
+  "answers": [
+    {
+      "question_id": "1",
+      "selected_option": 3,
+      "is_correct": true
+    },
+    {
+      "question_id": "2",
+      "selected_option": 4,
+      "is_correct": false
+    }
+  ]
+}
+```
