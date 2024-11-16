@@ -94,33 +94,40 @@ export const submitAnswer = async (req: Request, res: Response): Promise<void> =
 
         const isCorrect = question.correctOption === selectedOption;
 
-        // Try to find the user's results for this quiz
+        // Find or create the user's quiz result
         let quizResult = results.find((r) => r.quizId === quizId && r.userId === userId);
 
-        // If the user's result doesn't exist, create a new one
         if (!quizResult) {
+            // If no result exists for this user, create a new result object
             quizResult = {
                 quizId,
                 userId,
                 score: 0,
                 answers: [],
             };
-            results.push(quizResult); // Add new result to the results array
+            results.push(quizResult);  // Add to the results array
         }
 
-        // Add the user's answer to the answers array
-        const newAnswer: Answer = {
-            questionId,
-            selectedOption,
-            isCorrect,
-        };
+        // Update or add the user's answer to the result
+        const existingAnswer = quizResult.answers.find((a) => a.questionId === questionId);
 
-        quizResult.answers.push(newAnswer);
+        if (existingAnswer) {
+            // If an answer for this question already exists, update it
+            existingAnswer.selectedOption = selectedOption;
+            existingAnswer.isCorrect = isCorrect;
+        } else {
+            // If no previous answer exists, add the new one
+            quizResult.answers.push({
+                questionId,
+                selectedOption,
+                isCorrect,
+            });
+        }
 
-        // Update the score
+        // Recalculate the score based on the answers array
         quizResult.score = quizResult.answers.reduce((totalScore, answer) => {
             if (answer.isCorrect) {
-                totalScore += 1; // Add to score if the answer is correct
+                totalScore += 1;  // Increment score for correct answers
             }
             return totalScore;
         }, 0);
