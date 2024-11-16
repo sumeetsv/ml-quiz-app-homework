@@ -4,9 +4,6 @@
 
 A quiz application that allows users to answer multiple-choice questions and receive feedback on their performance.
 
-## Note
-A docker-compose.yml file is not included in this project. However, you can set up and run the app by following the below instructions
-
 ## Getting Started
 
 ### Prerequisites
@@ -66,18 +63,18 @@ npm start
 
 ## Folder Structure
 
-- `src/`: Contains all source code files.
-- `dist/`: Contains the compiled JavaScript files after building the project.
-- `tests/`: Contains unit and integration test files.
+-   `src/`: Contains all source code files.
+-   `dist/`: Contains the compiled JavaScript files after building the project.
+-   `tests/`: Contains unit and integration test files.
 
 ## Technologies Used
 
-- **Node.js** - JavaScript runtime used for the server.
-- **Express.js** - Web framework for building the API.
-- **Jest** - Testing framework for unit and integration tests.
-- **TypeScript** - Superset of JavaScript for type safety.
-- **Joi** - Validation library for request validation.
-- **Supertest** - Testing library for HTTP assertions.
+-   **Node.js** - JavaScript runtime used for the server.
+-   **Express.js** - Web framework for building the API.
+-   **Jest** - Testing framework for unit and integration tests.
+-   **TypeScript** - Superset of JavaScript for type safety.
+-   **Joi** - Validation library for request validation.
+-   **Supertest** - Testing library for HTTP assertions.
 
 ## Dependencies
 
@@ -98,6 +95,7 @@ npm start
 ## Summary of Data Models
 
 ### `Question` Model
+
 ```
 {
   "id": "1",
@@ -108,6 +106,7 @@ npm start
 ```
 
 ### `Quiz` Model
+
 ```
 {
   "id": "12345",
@@ -130,6 +129,7 @@ npm start
 ```
 
 ### `Answer` Model
+
 ```
 {
   "question_id": "1",
@@ -139,6 +139,7 @@ npm start
 ```
 
 ### `QuizResult` Model
+
 ```
 {
   "quiz_id": "12345",

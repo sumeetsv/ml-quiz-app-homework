@@ -1,0 +1,25 @@
+services:
+    app:
+        build:
+            context: . # Context is the root directory where Dockerfile is located
+            dockerfile: Dockerfile # Reference to Dockerfile for building the app container
+        container_name: ml-quiz-app-container
+        ports:
+            - "3000:3000" # Map container port 3000 to host port 3000
+        volumes:
+            - ./src:/usr/src/app/src # Mount src directory for live code editing
+            - ./dist:/usr/src/app/dist # Mount dist directory for built files
+            - ./tests:/usr/src/app/tests # Mount tests directory
+            - ./.env:/usr/src/app/.env # Ensure .env file is accessible in the container
+            - ./package.json:/usr/src/app/package.json # Mount package.json
+            - ./package-lock.json:/usr/src/app/package-lock.json # Mount package-lock.json
+        working_dir: /usr/src/app # Set working directory inside the container
+        command: npm run devStart # Run devStart (nodemon) for development
+        environment:
+            - NODE_ENV=development
+        networks:
+            - quiz-app-network
+
+networks:
+    quiz-app-network:
+        driver: bridge # Standard bridge network for communication between services
