@@ -117,7 +117,7 @@ export const getResults = async (req: Request, res: Response): Promise<void> => 
         logger.info(`Fetching results for User ID: ${userId}, Quiz ID: ${quizId}`);
 
         const result = results.find(
-            (r) => r.quiz_id === quizId && r.user_id === userId
+            (r) => r.quizId === quizId && r.userId === userId
         );
 
         if (!result) {
@@ -130,9 +130,9 @@ export const getResults = async (req: Request, res: Response): Promise<void> => 
         res.json({
             score: result.score,
             answers: result.answers.map((answer) => ({
-                question_id: answer.question_id,
-                selected_option: answer.selected_option,
-                is_correct: answer.is_correct,
+                questionId: answer.questionId,
+                selectedOption: answer.selectedOption,
+                isCorrect: answer.isCorrect,
             })),
         });
     } catch (error: unknown) {

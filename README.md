@@ -154,9 +154,9 @@ docker-compose down
 
 ```
 {
-  "question_id": "1",
-  "selected_option": 3,
-  "is_correct": true
+  "questionId": "1",
+  "selectedOption": 3,
+  "isCorrect": true
 }
 ```
 
@@ -164,19 +164,19 @@ docker-compose down
 
 ```
 {
-  "quiz_id": "12345",
-  "user_id": "user123",
+  "quizId": "12345",
+  "userId": "user123",
   "score": 1,
   "answers": [
     {
-      "question_id": "1",
-      "selected_option": 3,
-      "is_correct": true
+      "questionId": "1",
+      "selectedOption": 3,
+      "isCorrect": true
     },
     {
-      "question_id": "2",
-      "selected_option": 4,
-      "is_correct": false
+      "questionId": "2",
+      "selectedOption": 4,
+      "isCorrect": false
     }
   ]
 }

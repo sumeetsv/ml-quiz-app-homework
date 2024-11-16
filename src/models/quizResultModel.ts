@@ -1,8 +1,8 @@
 import { Answer } from "./answerModel";
 
 export interface QuizResult {
-    quiz_id: string;
-    user_id: string;
+    quizId: string;
+    userId: string;
     score: number;
     answers: Answer[];
 }
